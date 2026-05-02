@@ -21,7 +21,7 @@
     "@types/cors": "^2.8.18",
     "@types/express": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.9",
-    "@types/mongoose": "^5.11.97",
+    "@types/mongoose": "^5.11.9git7",
     "@types/node": "^22.15.21",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
