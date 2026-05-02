@@ -7,8 +7,77 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum prokerStatus {
+  ComingSoon
+  OnGoing
+  Completed
+}
 
-model Initial {
-  id String @id @default(uuid())
-  tag String
+model departement {
+  id               String            @id @default(uuid())
+  name             String
+  description      String
+  fotoDepartements fotoDepartement[]
+  users            user[]
+  prokers          Proker[]
+}
+
+model fotoDepartement {
+  id             String      @id @default(uuid())
+  departement_id String
+  departement    departement @relation(fields: [departement_id], references: [id])
+  url            String
+  namaFoto       String
+}
+
+model user {
+  id             String        @id @default(uuid())
+  departement_id String
+  departement    departement   @relation(fields: [departement_id], references: [id])
+  username       String
+  password       String
+  created_at     DateTime      @default(now())
+  achievements   Achievement[]
+}
+
+model Achievement {
+  id                 String            @id @default(uuid())
+  title              String
+  location           String
+  created_by_user_id String
+  user               user              @relation(fields: [created_by_user_id], references: [id])
+  description        String
+  achiever_name      String
+  achievement_date   DateTime
+  created_at         DateTime          @default(now())
+  fotoAchievements   fotoAchievement[]
+}
+
+model Proker {
+  id             String       @id @default(uuid())
+  departement_id String
+  departement    departement  @relation(fields: [departement_id], references: [id])
+  name           String
+  description    String
+  status         prokerStatus @default(ComingSoon)
+  event_start    DateTime
+  event_end      DateTime
+  location       String
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @default(now())
+  fotoProkers    fotoProker[]
+}
+
+model fotoProker {
+  id        String @id @default(uuid())
+  proker_id String
+  proker    Proker @relation(fields: [proker_id], references: [id])
+  url       String
+}
+
+model fotoAchievement {
+  id             String      @id @default(uuid())
+  achievement_id String
+  achievement    Achievement @relation(fields: [achievement_id], references: [id])
+  url            String
 }
