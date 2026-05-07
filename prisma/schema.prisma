@@ -38,6 +38,7 @@ model user {
   password       String
   created_at     DateTime      @default(now())
   achievements   Achievement[]
+  activities  Activity[] 
 }
 
 model Achievement {
@@ -80,4 +81,33 @@ model fotoAchievement {
   achievement_id String
   achievement    Achievement @relation(fields: [achievement_id], references: [id])
   url            String
+}
+
+enum activityStatus {
+  ComingSoon
+  OnGoing
+  Completed
+}
+
+model Activity {
+  id                 String         @id @default(uuid())
+  title              String
+  description        String
+  division           String
+  location           String
+  status             activityStatus @default(ComingSoon)
+  event_start        DateTime
+  event_end          DateTime
+  created_by_user_id String
+  user               user           @relation(fields: [created_by_user_id], references: [id])
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @default(now())
+  fotoActivities     fotoActivity[]
+}
+
+model fotoActivity {
+  id          String   @id @default(uuid())
+  activity_id String
+  activity    Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+  url         String
 }
