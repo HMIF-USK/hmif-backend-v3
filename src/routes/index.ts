@@ -1,11 +1,9 @@
 import { Router } from "express";
 import authRouter from "@/module/auth/AuthRouter";
-import ProkerRouter from "@/module/proker/ProkerRouter";
-
+import prokerRouter from "@/module/proker/ProkerRouter"; 
 
 const router = Router();
 
 router.use("/auth", authRouter);
-router.use("/prokers", ProkerRouter);
-
+router.use("/prokers", prokerRouter); 
 export default router;

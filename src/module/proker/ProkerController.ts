@@ -22,26 +22,39 @@ class ProkerController {
                 event_start,
                 event_end,
                 location,
-                status
+                status,
+                photos // Asumsi client mengirim array: ["url1", "url2"]
             } = req.body;
 
-            // Validasi minimal
+            // Validasi input
             if (!name || !departement_id || !event_start || !event_end) {
-                return res.status(400).json({ message: "Field wajib belum terisi" });
+                return res.status(400).json({ message: "Data utama Proker wajib diisi" });
             }
 
-            const newProker = await ProkerService.createProker({
-                name,
-                departement_id,
-                description,
-                event_start: new Date(event_start), // Konversi string ke Date
-                event_end: new Date(event_end),     // Konversi string ke Date
-                location,
-                status
+            const newProker = await ProkerService.createProker(
+                {
+                    name,
+                    departement_id,
+                    description,
+                    event_start: new Date(event_start),
+                    event_end: new Date(event_end),
+                    location,
+                    status: status || "ComingSoon",
+                },
+                photos || [] // Kirim array kosong jika tidak ada foto
+            );
+
+            return res.status(201).json({
+                message: "Proker dan foto berhasil dibuat",
+                data: newProker
             });
-            res.status(201).json({ message: "Created" });
-        } catch (error) {
-            res.status(500).json({ message: "Error" });
+
+        } catch (error: any) {
+            console.error("DEBUG ERROR:", error);
+            return res.status(500).json({
+                message: "Internal Server Error",
+                error: error.message
+            });
         }
     };
 }

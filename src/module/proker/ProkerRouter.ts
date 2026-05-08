@@ -1,18 +1,16 @@
-import express from "express";
-import ProkerController from "@/module/proker/ProkerController";
+// ProkerRouter.ts
+import express, { Request, Response, NextFunction } from "express";
+import prokerController from "@/module/proker/ProkerController";
 
-class ProkerRouter {
-  public prokerRouter;
-  constructor() {
-    this.prokerRouter = express.Router();
-    this.routes();
-  }
+const prokerRouter = express.Router();
 
-  private routes() {
-    this.prokerRouter.get("/", ProkerController.getProkers);
-    // Gunakan 'as any' hanya jika benar-benar darurat untuk tes apakah jalan
-    this.prokerRouter.post("/", ProkerController.postProker as any);
-  }
-}
+// Wrap handlers properly with explicit typing -- Ini eror memang gilerr sia
+prokerRouter.get("/", (req: Request, res: Response, next: NextFunction) => {
+  prokerController.getProkers(req, res).catch(next);
+});
 
-export default new ProkerRouter().prokerRouter;
+prokerRouter.post("/", (req: Request, res: Response, next: NextFunction) => {
+  prokerController.postProker(req, res).catch(next);
+});
+
+export default prokerRouter;
