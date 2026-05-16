@@ -13,4 +13,9 @@ prokerRouter.post("/", (req: Request, res: Response, next: NextFunction) => {
   prokerController.postProker(req, res).catch(next);
 });
 
+// Tambahkan di dalam file ProkerRouter.ts kamu
+prokerRouter.get("/:id", (req: Request, res: Response, next: NextFunction) => {
+  prokerController.getProkerById(req, res).catch(next);
+});
+
 export default prokerRouter;

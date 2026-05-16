@@ -11,6 +11,15 @@
             });
         }
 
+        public async getProkerById(id: string) {
+            return await prisma.proker.findUnique({
+                where: { id },
+                include: {
+                    departement: true,   // Ambil detail departemen
+                    fotoProkers: true,   // Ambil semua foto terkait
+                },
+            });
+        }
 
         public async createProker(
             prokerData: {

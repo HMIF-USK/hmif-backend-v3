@@ -13,6 +13,22 @@ class ProkerController {
         }
     };
 
+    public getProkerById = async (req: Request, res: Response) => {
+        try {
+            const { id } = req.params;
+            const data = await ProkerService.getProkerById(id);
+
+            if (!data) {
+                return res.status(404).json({ message: "Program kerja tidak ditemukan" });
+            }
+
+            return res.status(200).json({ message: "Success", data });
+        } catch (error: any) {
+            console.error("DEBUG ERROR GET BY ID:", error);
+            return res.status(500).json({ message: "Internal server error", error: error.message });
+        }
+    };
+
     public postProker = async (req: Request, res: Response) => {
         try {
             const {
