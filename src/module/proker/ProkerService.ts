@@ -46,6 +46,28 @@
                 },
             });
         }
+
+        public async deleteProker(id: string) {
+            // 1. Hapus semua foto yang terikat dengan proker ini terlebih dahulu
+            await prisma.fotoProker.deleteMany({
+                where: { proker_id: id }
+            });
+
+            // 2. Baru hapus data Proker utamanya
+            return await prisma.proker.delete({
+                where: { id }
+            });
+        }
+
+        public async updateProker(id: string, data: any) {
+            return await prisma.proker.update({
+                where: { id },
+                data: {
+                    ...data,
+                    updated_at: new Date() // Pastikan waktu update tercatat
+                }
+            });
+        }
     }
 
     export default new ProkerService();
