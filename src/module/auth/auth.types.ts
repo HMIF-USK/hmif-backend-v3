@@ -1,18 +1,12 @@
 export interface IAuth {
   id: any;
-  email: string;
-  fullName: string;
-  phone: string;
+  username: string;
   password: string;
-  token: string;
-  createdAt: Date;
-  updateAt: Date;
+  token?: string;
+  created_at: Date;
 }
 
-export type JwtPayload = Pick<IAuth, "id" | "email" | "fullName" | "phone">;
-export type PickRegister = Pick<
-  IAuth,
-  "email" | "fullName" | "phone" | "password"
->;
-export type PickLogin = Pick<IAuth, "email" | "password">;
+export type JwtPayload = Pick<IAuth, "id" | "username">;
+export type PickRegister = Pick<IAuth, "username" | "password">;
+export type PickLogin = Pick<IAuth, "username" | "password">;
 export type PickLogout = Pick<IAuth, "id">;

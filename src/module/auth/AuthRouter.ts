@@ -1,5 +1,6 @@
-import express from "express";
+ import express from "express";
 import AuthController from "@/module/auth/AuthController";
+
 class AuthRouter {
   public authRouter;
   constructor() {
@@ -8,7 +9,7 @@ class AuthRouter {
   }
 
   private routes() {
-    //  initial router
+    this.authRouter.post("/login", AuthController.login);
   }
 }
 
