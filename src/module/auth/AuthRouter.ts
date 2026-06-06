@@ -1,4 +1,4 @@
-import express from "express";
+ import express from "express";
 import AuthController from "@/module/auth/AuthController";
 
 class AuthRouter {
