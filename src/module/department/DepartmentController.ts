@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import DepartmentService from "./DepartmentService.ts";
+import DepartmentService from "./DepartmentService";
 
 class DepartmentController {
 
