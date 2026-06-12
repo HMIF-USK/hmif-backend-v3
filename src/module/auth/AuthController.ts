@@ -36,7 +36,6 @@ class AuthController {
   public register = async (req: Request, res: Response): Promise<void> => {
     try {
       const payload: PickRegister = req.body;
-
       const service = await AuthService.registerDeveloper(payload, res);
 
       if (!service) {
