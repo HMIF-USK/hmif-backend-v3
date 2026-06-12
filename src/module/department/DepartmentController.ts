@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler } from "express";
 import DepartmentService from "./DepartmentService";
 
 class DepartmentController {
-  public async getDepartmentById(req: Request, res: Response) {
+  public getDepartmentById: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     try {
       const response = await DepartmentService.getDepartmentById(req.params.id);
 
@@ -12,9 +12,9 @@ class DepartmentController {
         message: error.message,
       });
     }
-  }
+  };
 
-  public async updateDepartment(req: Request, res: Response) {
+  public updateDepartment: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     try {
       const response = await DepartmentService.updateDepartment(
         req.params.id,
@@ -23,10 +23,11 @@ class DepartmentController {
       );
 
       if (!response) {
-        return res.status(400).json({
+        res.status(400).json({
           status: 400,
           message: "service internal error",
         });
+        return;
       }
 
       res.status(200).json(response);
@@ -35,7 +36,7 @@ class DepartmentController {
         message: error.message,
       });
     }
-  }
+  };
 }
 
 export default new DepartmentController();
