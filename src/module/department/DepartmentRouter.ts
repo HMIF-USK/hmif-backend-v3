@@ -3,7 +3,7 @@ import DepartmentController from "./DepartmentController";
 
 class DepartmentRouter {
 
-  public departmentRouter;
+  public departmentRouter: express.Router;
 
   constructor() {
 
