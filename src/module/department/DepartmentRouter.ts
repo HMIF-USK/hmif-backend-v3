@@ -6,15 +6,12 @@ class DepartmentRouter {
   public departmentRouter: express.Router;
 
   constructor() {
-
     this.departmentRouter = express.Router();
 
     this.routes();
-
   }
 
   private routes() {
-
     this.departmentRouter.get(
       "/:id",
       DepartmentController.getDepartmentById
@@ -24,9 +21,7 @@ class DepartmentRouter {
       "/:id",
       DepartmentController.updateDepartment
     );
-
   }
-
 }
 
 export default new DepartmentRouter().departmentRouter;

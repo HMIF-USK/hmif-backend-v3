@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response, RequestHandler } from "express";
 import DepartmentService from "./DepartmentService";
 
 class DepartmentController {
 
-  public async getDepartmentById(
+  public getDepartmentById: RequestHandler = async (
     req: Request,
     res: Response
-  ): Promise<void> {
+  ): Promise<void> => {
     try {
 
       const response =
@@ -36,12 +36,12 @@ class DepartmentController {
         message: "Internal Server Error"
       });
     }
-  }
+  };
 
-  public async updateDepartment(
+  public updateDepartment: RequestHandler = async (
     req: Request,
     res: Response
-  ): Promise<void> {
+  ): Promise<void> => {
     try {
 
       const response =
@@ -72,7 +72,7 @@ class DepartmentController {
         message: "Internal Server Error"
       });
     }
-  }
+  };
 
 }
 
