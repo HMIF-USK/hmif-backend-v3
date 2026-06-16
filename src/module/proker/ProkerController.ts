@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import ProkerService from "./ProkerService";
 
-
 class ProkerController {
     public getProkers = async (req: Request, res: Response) => {
         try {
@@ -18,16 +17,16 @@ class ProkerController {
             const { id } = req.params;
             const data = await ProkerService.getProkerById(id);
 
-            if (!data) {
-                return res.status(404).json({ message: "Program kerja tidak ditemukan" });
-            }
+  public getProkerById = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const data = await ProkerService.getProkerById(id);
 
-            return res.status(200).json({ message: "Success", data });
-        } catch (error: any) {
-            console.error("DEBUG ERROR GET BY ID:", error);
-            return res.status(500).json({ message: "Internal server error", error: error.message });
-        }
-    };
+      if (!data) {
+        return res
+          .status(404)
+          .json({ message: "Program kerja tidak ditemukan" });
+      }
 
     
     public postProker = async (req: Request, res: Response) => {
@@ -60,10 +59,18 @@ class ProkerController {
                 photos || []
             );
 
-            return res.status(201).json({
-                message: "Proker dan foto berhasil dibuat",
-                data: newProker
-            });
+      const newProker = await ProkerService.createProker(
+        {
+          name,
+          departement_id,
+          description,
+          event_start: new Date(event_start),
+          event_end: new Date(event_end),
+          location,
+          status: status || "ComingSoon",
+        },
+        photos || [], // Kirim array kosong jika tidak ada foto
+      );
 
         } catch (error: any) {
             console.error("DEBUG ERROR:", error);
