@@ -68,18 +68,24 @@ const options: swaggerJSDoc.Options = {
           tags: ["Proker"],
           responses: {
             200: {
-              description: "Success",
+              description: "Berhasil mengambil semua data proker",
               content: {
                 "application/json": {
                   schema: {
                     type: "object",
                     properties: {
                       message: { type: "string", example: "Success" },
-                      data: { type: "array", items: { $ref: "#/components/schemas/Proker" } }
+                      data: {
+                        type: "array",
+                        items: { $ref: "#/components/schemas/Proker" }
+                      }
                     }
                   }
                 }
               }
+            },
+            500: {
+              description: "Internal server error"
             }
           }
         },
@@ -95,20 +101,43 @@ const options: swaggerJSDoc.Options = {
                   required: ["name", "departement_id", "event_start", "event_end"],
                   properties: {
                     name: { type: "string", example: "Makrab Informatika" },
-                    departement_id: { type: "string", example: "uuid-dept-kamu" },
-                    description: { type: "string", example: "Acara keakraban" },
+                    departement_id: { type: "string", example: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d" },
+                    description: { type: "string", example: "Acara keakraban mahasiswa" },
                     event_start: { type: "string", format: "date-time", example: "2026-06-05T12:00:00Z" },
                     event_end: { type: "string", format: "date-time", example: "2026-06-06T12:00:00Z" },
                     location: { type: "string", example: "Lampuuk" },
                     status: { $ref: "#/components/schemas/ProkerStatus" },
-                    photos: { type: "array", items: { type: "string" }, example: ["https://linkfoto.com/1.png"] }
+                    photos: {
+                      type: "array",
+                      items: { type: "string" },
+                      example: ["https://linkfoto.com/1.png", "https://linkfoto.com/2.png"]
+                    }
                   }
                 }
               }
             }
           },
           responses: {
-            201: { description: "Created" }
+            201: {
+              description: "Proker dan foto berhasil dibuat",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      message: { type: "string", example: "Proker dan foto berhasil dibuat" },
+                      data: { $ref: "#/components/schemas/Proker" }
+                    }
+                  }
+                }
+              }
+            },
+            400: {
+              description: "Data utama Proker wajib diisi"
+            },
+            500: {
+              description: "Internal Server Error"
+            }
           }
         }
       },
@@ -117,18 +146,48 @@ const options: swaggerJSDoc.Options = {
           summary: "Mengambil detail satu proker berdasarkan ID",
           tags: ["Proker"],
           parameters: [
-            { name: "id", in: "path", required: true, schema: { type: "string" } }
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string" },
+              description: "UUID dari program kerja yang dicari"
+            }
           ],
           responses: {
-            200: { description: "Success" },
-            404: { description: "Not Found" }
+            200: {
+              description: "Data proker ditemukan",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      message: { type: "string", example: "Success" },
+                      data: { $ref: "#/components/schemas/Proker" }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: "Program kerja tidak ditemukan"
+            },
+            500: {
+              description: "Internal server error"
+            }
           }
         },
         put: {
-          summary: "Memperbarui data program kerja",
+          summary: "Memperbarui data program kerja berdasarkan ID",
           tags: ["Proker"],
           parameters: [
-            { name: "id", in: "path", required: true, schema: { type: "string" } }
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string" },
+              description: "UUID dari program kerja yang ingin diupdate"
+            }
           ],
           requestBody: {
             required: true,
@@ -137,7 +196,11 @@ const options: swaggerJSDoc.Options = {
                 schema: {
                   type: "object",
                   properties: {
-                    name: { type: "string" },
+                    name: { type: "string", example: "Nama Proker Terupdate" },
+                    description: { type: "string", example: "Deskripsi baru setelah revisi" },
+                    event_start: { type: "string", format: "date-time", example: "2026-06-10T09:00:00Z" },
+                    event_end: { type: "string", format: "date-time", example: "2026-06-10T17:00:00Z" },
+                    location: { type: "string", example: "Aula Baru Gedung ICT" },
                     status: { $ref: "#/components/schemas/ProkerStatus" }
                   }
                 }
@@ -145,21 +208,65 @@ const options: swaggerJSDoc.Options = {
             }
           },
           responses: {
-            200: { description: "Updated" }
+            200: {
+              description: "Program kerja berhasil diperbarui",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      message: { type: "string", example: "Program kerja berhasil diperbarui" },
+                      data: { $ref: "#/components/schemas/Proker" }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: "Program kerja tidak ditemukan"
+            },
+            500: {
+              description: "Internal server error"
+            }
           }
         },
         delete: {
-          summary: "Menghapus program kerja",
+          summary: "Menghapus program kerja berdasarkan ID",
           tags: ["Proker"],
           parameters: [
-            { name: "id", in: "path", required: true, schema: { type: "string" } }
+            {
+              name: "id",
+              in: "path",
+              required: true,
+              schema: { type: "string" },
+              description: "UUID dari program kerja yang ingin dihapus"
+            }
           ],
           responses: {
-            200: { description: "Deleted" }
+            200: {
+              description: "Program kerja berhasil dihapus",
+              content: {
+                "application/json": {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      message: { type: "string", example: "Program kerja berhasil dihapus" }
+                    }
+                  }
+                }
+              }
+            },
+            404: {
+              description: "Program kerja tidak ditemukan"
+            },
+            500: {
+              description: "Internal server error"
+            }
           }
         }
       }
     }
+    
   },
   apis: [
     "./src/app.ts",
