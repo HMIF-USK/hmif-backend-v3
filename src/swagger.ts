@@ -272,7 +272,6 @@ const options: swaggerJSDoc.Options = {
     "./src/app.ts",
     "./src/routes/*.ts",
     "./src/controllers/*.ts",
-    "./src/module/proker/ProkerController.ts" // <- Membaca semua file .ts di dalam subfolder module
   ], 
 };
 

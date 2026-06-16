@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ProkerService from "./ProkerService";
 
 class ProkerController {
+    // Get biasa
     public getProkers = async (req: Request, res: Response) => {
         try {
             const data = await ProkerService.getAllProkers();
@@ -11,24 +12,24 @@ class ProkerController {
         }
     };
 
-    
+
+    // GET BY ID 
     public getProkerById = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
             const data = await ProkerService.getProkerById(id);
 
-  public getProkerById = async (req: Request, res: Response) => {
-    try {
-      const { id } = req.params;
-      const data = await ProkerService.getProkerById(id);
+            if (!data) {
+                return res.status(404).json({ message: "Program kerja tidak ditemukan" });
+            }
 
-      if (!data) {
-        return res
-          .status(404)
-          .json({ message: "Program kerja tidak ditemukan" });
-      }
+            return res.status(200).json({ message: "Success", data });
+        } catch (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+    };
 
-    
+    // Post Proker
     public postProker = async (req: Request, res: Response) => {
         try {
             const {
@@ -59,18 +60,10 @@ class ProkerController {
                 photos || []
             );
 
-      const newProker = await ProkerService.createProker(
-        {
-          name,
-          departement_id,
-          description,
-          event_start: new Date(event_start),
-          event_end: new Date(event_end),
-          location,
-          status: status || "ComingSoon",
-        },
-        photos || [], // Kirim array kosong jika tidak ada foto
-      );
+            return res.status(201).json({
+                message: "Program kerja berhasil dibuat",
+                data: newProker
+            });
 
         } catch (error: any) {
             console.error("DEBUG ERROR:", error);
@@ -81,7 +74,7 @@ class ProkerController {
         }
     };
 
-    
+    // Delete Proker
     public deleteProker = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
@@ -99,7 +92,7 @@ class ProkerController {
         }
     };
 
-    
+    // Update Proker
     public updateProker = async (req: Request, res: Response) => {
         try {
             const { id } = req.params;
@@ -119,8 +112,11 @@ class ProkerController {
             console.error("DEBUG ERROR PUT:", error);
             return res.status(500).json({ message: "Internal server error", error: error.message });
         }
+
     };
 
+
 }
+
 
 export default new ProkerController();
