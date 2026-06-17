@@ -58,9 +58,13 @@ class AuthService {
         });
       }
 
+
+
+      const bycryptPassword = await bcrypt.hash(password, 10);
+
       const query = await prisma.user.create({
         data: {
-          password: password,
+          password: bycryptPassword,
           role: role,
           username: username,
         },
@@ -71,6 +75,10 @@ class AuthService {
           message: "query bad request",
         });
       }
+
+      // const  depe = await prisma.departement.create({
+
+      // })
       return query;
     } catch (error) {
       res.status(500).json({

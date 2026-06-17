@@ -1,6 +1,5 @@
 import express from "express";
-import AchievementsController from "@/module/achievements/AchievementsController";
-
+import AchievementsController from "./AchievementsController";
 class AchievementsRouter {
   public achievementsRouter;
 
@@ -11,7 +10,7 @@ class AchievementsRouter {
 
   private routes() {
     // GET /achievements - Get all achievements
-    this.achievementsRouter.get("/", AchievementsController.getAllAchievements);
+    this.achievementsRouter.get("/", AchievementsController.getLatestAchievements);
 
     // GET /achievements/latest - Get latest achievements with optional limit
     this.achievementsRouter.get("/latest", AchievementsController.getLatestAchievements);

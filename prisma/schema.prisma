@@ -7,44 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum prokerStatus {
-  ComingSoon
-  OnGoing
-  Completed
-}
-
-enum userrRole {
-  mba
-  superUser
-}
-
 model departement {
   id               String            @id @default(uuid())
   name             String
   description      String
-  user_id String
-  fotoDepartements fotoDepartement[]
+  user_id          String
   prokers          Proker[]
-  user user @relation(fields: [user_id], references: [id])
+  user             user              @relation(fields: [user_id], references: [id])
+  fotoDepartements fotoDepartement[]
 }
 
 model fotoDepartement {
   id             String      @id @default(uuid())
   departement_id String
-  departement    departement @relation(fields: [departement_id], references: [id])
   url            String
   namaFoto       String
+  departement    departement @relation(fields: [departement_id], references: [id])
 }
 
 model user {
-  id             String        @id @default(uuid())  
-  username       String
-  password       String
-  role userrRole
-  created_at     DateTime      @default(now())
-  achievements   Achievement[]
-  activities  Activity[]
-  departement departement[]
+  id           String        @id @default(uuid())
+  username     String
+  password     String
+  created_at   DateTime      @default(now())
+  role         userrRole
+  achievements Achievement[]
+  activities   Activity[]
+  departement  departement[]
 }
 
 model Achievement {
@@ -52,18 +41,17 @@ model Achievement {
   title              String
   location           String
   created_by_user_id String
-  user               user              @relation(fields: [created_by_user_id], references: [id])
   description        String
   achiever_name      String
   achievement_date   DateTime
   created_at         DateTime          @default(now())
+  user               user              @relation(fields: [created_by_user_id], references: [id])
   fotoAchievements   fotoAchievement[]
 }
 
 model Proker {
   id             String       @id @default(uuid())
   departement_id String
-  departement    departement  @relation(fields: [departement_id], references: [id])
   name           String
   description    String
   status         prokerStatus @default(ComingSoon)
@@ -72,27 +60,22 @@ model Proker {
   location       String
   created_at     DateTime     @default(now())
   updated_at     DateTime     @default(now())
+  departement    departement  @relation(fields: [departement_id], references: [id])
   fotoProkers    fotoProker[]
 }
 
 model fotoProker {
   id        String @id @default(uuid())
   proker_id String
-  proker    Proker @relation(fields: [proker_id], references: [id])
   url       String
+  proker    Proker @relation(fields: [proker_id], references: [id])
 }
 
 model fotoAchievement {
   id             String      @id @default(uuid())
   achievement_id String
-  achievement    Achievement @relation(fields: [achievement_id], references: [id])
   url            String
-}
-
-enum activityStatus {
-  ComingSoon
-  OnGoing
-  Completed
+  achievement    Achievement @relation(fields: [achievement_id], references: [id])
 }
 
 model Activity {
@@ -105,15 +88,32 @@ model Activity {
   event_start        DateTime
   event_end          DateTime
   created_by_user_id String
-  user               user           @relation(fields: [created_by_user_id], references: [id])
   created_at         DateTime       @default(now())
   updated_at         DateTime       @default(now())
+  user               user           @relation(fields: [created_by_user_id], references: [id])
   fotoActivities     fotoActivity[]
 }
 
 model fotoActivity {
   id          String   @id @default(uuid())
   activity_id String
-  activity    Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
   url         String
+  activity    Activity @relation(fields: [activity_id], references: [id], onDelete: Cascade)
+}
+
+enum prokerStatus {
+  ComingSoon
+  OnGoing
+  Completed
+}
+
+enum userrRole {
+  mba
+  superUser
+}
+
+enum activityStatus {
+  ComingSoon
+  OnGoing
+  Completed
 }
