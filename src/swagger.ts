@@ -1,16 +1,18 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import { prokerPaths } from "./docs/proker.docs";
 
 const options: swaggerJSDoc.Options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Boilerpad API",
+      title: "Hmif USK API",
       version: "1.0.0",
-      description: "Express TypeScript API documentation generated with Swagger.",
+      description:
+        "Express TypeScript API documentation generated with Swagger.",
     },
     servers: [
       {
-        url: "http://localhost:5000", 
+        url: "http://localhost:5000",
       },
     ],
     components: {
@@ -41,7 +43,7 @@ const options: swaggerJSDoc.Options = {
         ProkerStatus: {
           type: "string",
           enum: ["ComingSoon", "OnGoing", "Completed"],
-          example: "ComingSoon"
+          example: "ComingSoon",
         },
         Proker: {
           type: "object",
@@ -49,18 +51,21 @@ const options: swaggerJSDoc.Options = {
             id: { type: "string", format: "uuid" },
             departement_id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Upgrading HMIF 2026" },
-            description: { type: "string", example: "Meningkatkan solidaritas" },
+            description: {
+              type: "string",
+              example: "Meningkatkan solidaritas",
+            },
             status: { $ref: "#/components/schemas/ProkerStatus" },
             event_start: { type: "string", format: "date-time" },
             event_end: { type: "string", format: "date-time" },
             location: { type: "string", example: "Aula FMIPA" },
             created_at: { type: "string", format: "date-time" },
-            updated_at: { type: "string", format: "date-time" }
-          }
-        }
+            updated_at: { type: "string", format: "date-time" },
+          },
+        },
       },
     },
-    // Definisikan endpoint dan operasi API di sini ygy
+   
     paths: {
       "/api/prokers": {
         get: {

@@ -60,10 +60,15 @@ class ProkerController {
                 photos || []
             );
 
+
             return res.status(201).json({
                 message: "Program kerja berhasil dibuat",
                 data: newProker
             });
+
+            
+            return res.status(201).json({ message: "Program kerja berhasil dibuat", data: newProker });
+
 
         } catch (error: any) {
             console.error("DEBUG ERROR:", error);
