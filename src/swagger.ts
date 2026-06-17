@@ -1,5 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import { prokerPaths } from "./docs/proker.docs";
+import { achievementsPaths, achievementsSchemas } from "./docs/Achievements.docs";
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -63,11 +64,13 @@ const options: swaggerJSDoc.Options = {
             updated_at: { type: "string", format: "date-time" },
           },
         },
+        ...achievementsSchemas,
       },
     },
    
     paths: {
       ...prokerPaths,
+      ...achievementsPaths,
     },
   },
   apis: [
