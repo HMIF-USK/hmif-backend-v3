@@ -1,16 +1,18 @@
 import swaggerJSDoc from "swagger-jsdoc";
+import { prokerPaths } from "./docs/proker.docs";
 
 const options: swaggerJSDoc.Options = {
   definition: {
     openapi: "3.0.0",
     info: {
-      title: "Boilerpad API",
+      title: "Hmif USK API",
       version: "1.0.0",
-      description: "Express TypeScript API documentation generated with Swagger.",
+      description:
+        "Express TypeScript API documentation generated with Swagger.",
     },
     servers: [
       {
-        url: "http://localhost:5000", 
+        url: "http://localhost:5000",
       },
     ],
     components: {
@@ -41,7 +43,7 @@ const options: swaggerJSDoc.Options = {
         ProkerStatus: {
           type: "string",
           enum: ["ComingSoon", "OnGoing", "Completed"],
-          example: "ComingSoon"
+          example: "ComingSoon",
         },
         Proker: {
           type: "object",
@@ -49,124 +51,31 @@ const options: swaggerJSDoc.Options = {
             id: { type: "string", format: "uuid" },
             departement_id: { type: "string", format: "uuid" },
             name: { type: "string", example: "Upgrading HMIF 2026" },
-            description: { type: "string", example: "Meningkatkan solidaritas" },
+            description: {
+              type: "string",
+              example: "Meningkatkan solidaritas",
+            },
             status: { $ref: "#/components/schemas/ProkerStatus" },
             event_start: { type: "string", format: "date-time" },
             event_end: { type: "string", format: "date-time" },
             location: { type: "string", example: "Aula FMIPA" },
             created_at: { type: "string", format: "date-time" },
-            updated_at: { type: "string", format: "date-time" }
-          }
-        }
+            updated_at: { type: "string", format: "date-time" },
+          },
+        },
       },
     },
-    // Definisikan endpoint dan operasi API di sini ygy
+   
     paths: {
-      "/api/prokers": {
-        get: {
-          summary: "Mengambil semua data program kerja",
-          tags: ["Proker"],
-          responses: {
-            200: {
-              description: "Success",
-              content: {
-                "application/json": {
-                  schema: {
-                    type: "object",
-                    properties: {
-                      message: { type: "string", example: "Success" },
-                      data: { type: "array", items: { $ref: "#/components/schemas/Proker" } }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        post: {
-          summary: "Membuat program kerja baru beserta foto terkait",
-          tags: ["Proker"],
-          requestBody: {
-            required: true,
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  required: ["name", "departement_id", "event_start", "event_end"],
-                  properties: {
-                    name: { type: "string", example: "Makrab Informatika" },
-                    departement_id: { type: "string", example: "uuid-dept-kamu" },
-                    description: { type: "string", example: "Acara keakraban" },
-                    event_start: { type: "string", format: "date-time", example: "2026-06-05T12:00:00Z" },
-                    event_end: { type: "string", format: "date-time", example: "2026-06-06T12:00:00Z" },
-                    location: { type: "string", example: "Lampuuk" },
-                    status: { $ref: "#/components/schemas/ProkerStatus" },
-                    photos: { type: "array", items: { type: "string" }, example: ["https://linkfoto.com/1.png"] }
-                  }
-                }
-              }
-            }
-          },
-          responses: {
-            201: { description: "Created" }
-          }
-        }
-      },
-      "/api/prokers/{id}": {
-        get: {
-          summary: "Mengambil detail satu proker berdasarkan ID",
-          tags: ["Proker"],
-          parameters: [
-            { name: "id", in: "path", required: true, schema: { type: "string" } }
-          ],
-          responses: {
-            200: { description: "Success" },
-            404: { description: "Not Found" }
-          }
-        },
-        put: {
-          summary: "Memperbarui data program kerja",
-          tags: ["Proker"],
-          parameters: [
-            { name: "id", in: "path", required: true, schema: { type: "string" } }
-          ],
-          requestBody: {
-            required: true,
-            content: {
-              "application/json": {
-                schema: {
-                  type: "object",
-                  properties: {
-                    name: { type: "string" },
-                    status: { $ref: "#/components/schemas/ProkerStatus" }
-                  }
-                }
-              }
-            }
-          },
-          responses: {
-            200: { description: "Updated" }
-          }
-        },
-        delete: {
-          summary: "Menghapus program kerja",
-          tags: ["Proker"],
-          parameters: [
-            { name: "id", in: "path", required: true, schema: { type: "string" } }
-          ],
-          responses: {
-            200: { description: "Deleted" }
-          }
-        }
-      }
-    }
+      ...prokerPaths,
+    },
   },
   apis: [
     "./src/app.ts",
     "./src/routes/*.ts",
     "./src/controllers/*.ts",
-    "./src/module/proker/ProkerController.ts" // <- Membaca semua file .ts di dalam subfolder module
-  ], 
+    "./src/module/proker/ProkerController.ts",
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

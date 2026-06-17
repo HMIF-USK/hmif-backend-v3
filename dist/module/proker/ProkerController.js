@@ -1,65 +1,51 @@
-import { Request, Response } from "express";
-import ProkerService from "./ProkerService";
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const ProkerService_1 = __importDefault(require("./ProkerService"));
 class ProkerController {
-    public getProkers = async (req: Request, res: Response) => {
+    getProkers = async (req, res) => {
         try {
-            const data = await ProkerService.getAllProkers();
+            const data = await ProkerService_1.default.getAllProkers();
             res.status(200).json({ message: "Success", data });
-        } catch (error) {
+        }
+        catch (error) {
             res.status(500).json({ message: "Internal server error" });
         }
     };
-
-    public getProkerById = async (req: Request, res: Response) => {
+    getProkerById = async (req, res) => {
         try {
             const { id } = req.params;
-            const data = await ProkerService.getProkerById(id);
-
+            const data = await ProkerService_1.default.getProkerById(id);
             if (!data) {
                 return res.status(404).json({ message: "Program kerja tidak ditemukan" });
             }
-
             return res.status(200).json({ message: "Success", data });
-        } catch (error: any) {
+        }
+        catch (error) {
             console.error("DEBUG ERROR:", error);
             return res.status(500).json({ message: "Internal server error" });
         }
     };
-
-    public postProker = async (req: Request, res: Response) => {
+    postProker = async (req, res) => {
         try {
-            const {
-                name,
-                departement_id,
-                description,
-                event_start,
-                event_end,
-                location,
-                status,
-                photos
-            } = req.body;
-
+            const { name, departement_id, description, event_start, event_end, location, status, photos } = req.body;
             if (!name || !departement_id || !event_start || !event_end) {
                 return res.status(400).json({ message: "Data utama Proker wajib diisi" });
             }
-
-            const newProker = await ProkerService.createProker(
-                {
-                    name,
-                    departement_id,
-                    description,
-                    event_start: new Date(event_start),
-                    event_end: new Date(event_end),
-                    location,
-                    status: status || "ComingSoon",
-                },
-                photos || []
-            );
-            
+            const newProker = await ProkerService_1.default.createProker({
+                name,
+                departement_id,
+                description,
+                event_start: new Date(event_start),
+                event_end: new Date(event_end),
+                location,
+                status: status || "ComingSoon",
+            }, photos || []);
             return res.status(201).json({ message: "Program kerja berhasil dibuat", data: newProker });
-
-        } catch (error: any) {
+        }
+        catch (error) {
             console.error("DEBUG ERROR:", error);
             return res.status(500).json({
                 message: "Internal Server Error",
@@ -67,47 +53,40 @@ class ProkerController {
             });
         }
     };
-
-    
-    public deleteProker = async (req: Request, res: Response) => {
+    deleteProker = async (req, res) => {
         try {
             const { id } = req.params;
-
-            const checkProker = await ProkerService.getProkerById(id);
+            const checkProker = await ProkerService_1.default.getProkerById(id);
             if (!checkProker) {
                 return res.status(404).json({ message: "Program kerja tidak ditemukan" });
             }
-
-            await ProkerService.deleteProker(id);
+            await ProkerService_1.default.deleteProker(id);
             return res.status(200).json({ message: "Program kerja berhasil dihapus" });
-        } catch (error: any) {
+        }
+        catch (error) {
             console.error("DEBUG ERROR DELETE:", error);
             return res.status(500).json({ message: "Internal server error", error: error.message });
         }
     };
-
-    
-    public updateProker = async (req: Request, res: Response) => {
+    updateProker = async (req, res) => {
         try {
             const { id } = req.params;
             const body = req.body;
-
-            const checkProker = await ProkerService.getProkerById(id);
+            const checkProker = await ProkerService_1.default.getProkerById(id);
             if (!checkProker) {
                 return res.status(404).json({ message: "Program kerja tidak ditemukan" });
             }
-
-            if (body.event_start) body.event_start = new Date(body.event_start);
-            if (body.event_end) body.event_end = new Date(body.event_end);
-
-            const updatedData = await ProkerService.updateProker(id, body);
+            if (body.event_start)
+                body.event_start = new Date(body.event_start);
+            if (body.event_end)
+                body.event_end = new Date(body.event_end);
+            const updatedData = await ProkerService_1.default.updateProker(id, body);
             return res.status(200).json({ message: "Program kerja berhasil diperbarui", data: updatedData });
-        } catch (error: any) {
+        }
+        catch (error) {
             console.error("DEBUG ERROR PUT:", error);
             return res.status(500).json({ message: "Internal server error", error: error.message });
         }
     };
-
 }
-
-export default new ProkerController();
+exports.default = new ProkerController();

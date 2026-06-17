@@ -45,33 +45,6 @@ class ProkerService {
       },
     });
   }
-}
-
-        public async createProker(
-            prokerData: {
-                name: string;
-                departement_id: string;
-                description: string;
-                event_start: Date;
-                event_end: Date;
-                location: string;
-                status?: prokerStatus;
-            },
-            photoUrls: string[] // Tambahkan parameter untuk array URL foto
-        ) {
-            return await prisma.proker.create({
-                data: {
-                    ...prokerData,
-                    // Nested write: membuat fotoProker secara otomatis
-                    fotoProkers: {
-                        create: photoUrls.map((url) => ({ url })),
-                    },
-                },
-                include: {
-                    fotoProkers: true, // Kembalikan data foto juga di response
-                },
-            });
-        }
 
         public async deleteProker(id: string) {
             // 1. Hapus semua foto yang terikat dengan proker ini terlebih dahulu

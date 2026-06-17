@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.connectWithRetry = connectWithRetry;
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-async function connectWithRetry(retries = 5, delay = 3000) {
+async function connectWithRetry(retries = 10, delay = 3000) {
     for (let i = 0; i < retries; i++) {
         try {
             await prisma.$connect();
