@@ -1,5 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import { prokerPaths } from "./docs/proker.docs";
+import { departmentPaths } from "./docs/module/department.docs";
 
 const options: swaggerJSDoc.Options = {
   definition: {
@@ -68,6 +69,7 @@ const options: swaggerJSDoc.Options = {
    
     paths: {
       ...prokerPaths,
+      ...departmentPaths,
     },
   },
   apis: [
