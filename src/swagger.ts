@@ -183,7 +183,7 @@ const options: swaggerJSDoc.Options = {
           }
         },
         put: {
-          summary: "Memperbarui data program kerja berdasarkan ID",
+          summary: "Memperbarui data program kerja beserta fotonya berdasarkan ID",
           tags: ["Proker"],
           parameters: [
             {
@@ -206,7 +206,12 @@ const options: swaggerJSDoc.Options = {
                     event_start: { type: "string", format: "date-time", example: "2026-06-10T09:00:00Z" },
                     event_end: { type: "string", format: "date-time", example: "2026-06-10T17:00:00Z" },
                     location: { type: "string", example: "Aula Baru Gedung ICT" },
-                    status: { $ref: "#/components/schemas/ProkerStatus" }
+                    status: { $ref: "#/components/schemas/ProkerStatus" },
+                    photos: {
+                      type: "array",
+                      items: { type: "string" },
+                      example: ["https://linkfoto.com/foto-baru-1.png", "https://linkfoto.com/foto-baru-2.png"]
+                    }
                   }
                 }
               }
@@ -220,19 +225,15 @@ const options: swaggerJSDoc.Options = {
                   schema: {
                     type: "object",
                     properties: {
-                      message: { type: "string", example: "Program kerja berhasil diperbarui" },
+                      message: { type: "string", example: "Program kerja dan foto berhasil diperbarui" },
                       data: { $ref: "#/components/schemas/Proker" }
                     }
                   }
                 }
               }
             },
-            404: {
-              description: "Program kerja tidak ditemukan"
-            },
-            500: {
-              description: "Internal server error"
-            }
+            404: { description: "Program kerja tidak ditemukan" },
+            500: { description: "Internal server error" }
           }
         },
         delete: {
