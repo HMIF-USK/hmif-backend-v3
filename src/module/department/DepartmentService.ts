@@ -1,17 +1,19 @@
 import { PrismaClient } from "@prisma/client";
 import { PickUpdateDepartment } from "./department.types";
-import { Response } from "express";
 
-//bikin koneksi ke database
 const prisma = new PrismaClient();
 
 class DepartmentService {
-  //GET department by id
+
+  // GET department by id
   public async getDepartmentById(id: string) {
+
+    if (!id) {
+      throw new Error("Department id is required");
+    }
+
     const department = await prisma.departement.findUnique({
-      where: {
-        id,
-      },
+      where: { id }
     });
 
     if (!department) {
@@ -20,35 +22,41 @@ class DepartmentService {
 
     return {
       message: "Success get department",
-      data: department,
+      data: department
     };
   }
 
-  //PUT update department
+  // PUT update department
   public async updateDepartment(
     id: string,
-    payload: PickUpdateDepartment,
-    res: Response,
+    payload: PickUpdateDepartment
   ) {
-    const department = await prisma.departement.update({
-      where: {
-        id,
-      },
-      data: payload,
-    });
 
-    if (!department) {
-      return res.status(400).json({
-        status: 400,
-        message: "query is invalid",
-      });
+    if (!id) {
+      throw new Error("Department id is required");
     }
+
+    const checkDepartment =
+      await prisma.departement.findUnique({
+        where: { id }
+      });
+
+    if (!checkDepartment) {
+      throw new Error("Department not found");
+    }
+
+    const department =
+      await prisma.departement.update({
+        where: { id },
+        data: payload
+      });
 
     return {
       message: "Success update department",
-      data: department,
+      data: department
     };
   }
+
 }
 
 export default new DepartmentService();

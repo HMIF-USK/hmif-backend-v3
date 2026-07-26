@@ -1,7 +1,9 @@
 import express from "express";
 import DepartmentController from "./DepartmentController";
+
 class DepartmentRouter {
-  public departmentRouter;
+
+  public departmentRouter: express.Router;
 
   constructor() {
     this.departmentRouter = express.Router();
@@ -10,8 +12,15 @@ class DepartmentRouter {
   }
 
   private routes() {
-    this.departmentRouter.get("/:id", DepartmentController.getDepartmentById);
-    this.departmentRouter.put("/:id", DepartmentController.updateDepartment);
+    this.departmentRouter.get(
+      "/:id",
+      DepartmentController.getDepartmentById
+    );
+
+    this.departmentRouter.put(
+      "/:id",
+      DepartmentController.updateDepartment
+    );
   }
 }
 
