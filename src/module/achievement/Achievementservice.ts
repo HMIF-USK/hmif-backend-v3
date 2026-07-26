@@ -1,10 +1,11 @@
 import prisma from "@/lib/prisma";
+import { Scale } from "@prisma/client";
 
 interface CreateAchievementInput {
   title: string;
   description: string;
   location: string;
-  achiever_name: string;
+  scale: Scale;
   achievement_date: Date;
   created_by_user_id: string;
   foto_urls?: string[];
@@ -14,7 +15,7 @@ interface UpdateAchievementInput {
   title?: string;
   description?: string;
   location?: string;
-  achiever_name?: string;
+  scale?: Scale;
   achievement_date?: Date;
   foto_urls?: string[];
 }

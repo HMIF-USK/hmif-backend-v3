@@ -3,7 +3,7 @@ export interface AchievementResponse {
   title: string;
   location: string;
   description: string;
-  achiever_name: string;
+  scale: string;
   achievement_date: Date;
   created_by_user_id: string;
   created_at: Date;

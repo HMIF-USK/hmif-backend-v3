@@ -13,6 +13,14 @@ enum prokerStatus {
   Completed
 }
 
+enum Scale {
+  universitas
+  kabupaten_kota
+  provinsi
+  nasional
+  internasional
+}
+
 enum userrRole {
   mba
   superUser
@@ -54,7 +62,7 @@ model Achievement {
   created_by_user_id String
   user               user              @relation(fields: [created_by_user_id], references: [id])
   description        String
-  achiever_name      String
+  scale              Scale
   achievement_date   DateTime
   created_at         DateTime          @default(now())
   fotoAchievements   fotoAchievement[]
