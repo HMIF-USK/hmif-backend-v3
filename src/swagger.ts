@@ -64,6 +64,26 @@ const options: swaggerJSDoc.Options = {
             updated_at: { type: "string", format: "date-time" },
           },
         },
+
+        Department:{
+          type: "object",
+          properties:{
+            id:{
+              type: "string",
+              format: "uuid",
+            },
+            name:{
+              type:"string",
+              example:"Departemen PPM",
+            },
+            description:{
+              type:"string",
+              example:"Departemen Pengembangan dan Penelitian Mahasiswa",
+            },
+          },
+        },
+
+        
       },
     },
    

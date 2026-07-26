@@ -1,5 +1,3 @@
-import { Deserializer } from "v8";
-
 export const departmentPaths = {
   "/api/departments/{id}": {
     get: {
@@ -18,6 +16,22 @@ export const departmentPaths = {
       responses: {
         200: {
           description: "Success get department",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Success get department",
+                  },
+                  data: {
+                    $ref: "#/components/schemas/Department",
+                  },
+                },
+              },
+            },
+          },
         },
         404: {
           description: "Department not found",
@@ -54,7 +68,8 @@ export const departmentPaths = {
                 },
                 description: {
                   type: "string",
-                  example: "Departemen Pengembangan dan Penelitian Mahasiswa",
+                  example:
+                    "Departemen Pengembangan dan Penelitian Mahasiswa",
                 },
               },
             },
@@ -64,9 +79,25 @@ export const departmentPaths = {
       responses: {
         200: {
           description: "Success update department",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Success update department",
+                  },
+                  data: {
+                    $ref: "#/components/schemas/Department",
+                  },
+                },
+              },
+            },
+          },
         },
         400: {
-          description: "Bad Request / Data yang dikirim tidak valid"
+          description: "Bad Request / Data yang dikirim tidak valid",
         },
         404: {
           description: "Department not found",
