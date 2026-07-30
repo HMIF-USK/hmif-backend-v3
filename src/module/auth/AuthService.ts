@@ -44,9 +44,39 @@ class AuthService {
       user: {
         id: user.id,
         username: user.username,
+        role: user.role,
       },
     };
   }
+
+  public async profile(user: { id?: string; username?: string } | undefined, res: Response) {
+    if (!user?.id) {
+      return res.status(401).json({
+        message: "Unauthorized",
+        status: 401,
+      });
+    }
+
+    const profile = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        username: true,
+        role: true,
+        created_at: true,
+      },
+    });
+
+    if (!profile) {
+      return res.status(404).json({
+        message: "user not found",
+        status: 404,
+      });
+    }
+
+    return profile;
+  }
+
   public async registerDeveloper(payload: PickRegister, res: Response) {
     try {
       const { password, role, username } = payload;
@@ -58,9 +88,11 @@ class AuthService {
         });
       }
 
+      const hashedPassword = await bcrypt.hash(password, 10);
+
       const query = await prisma.user.create({
         data: {
-          password: password,
+          password: hashedPassword,
           role: role,
           username: username,
         },

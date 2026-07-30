@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.achievementService = void 0;
-const prisma_1 = __importDefault(require("../../lib/prisma"));
+const prisma_1 = __importDefault(require("@/lib/prisma"));
 exports.achievementService = {
     async create(data) {
         const { foto_urls, ...achievementData } = data;

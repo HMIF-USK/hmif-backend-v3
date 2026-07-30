@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const Achievementcontroller_1 = require("../../module/achievement/Achievementcontroller");
-const auth_1 = require("../../middleware/auth");
-const Achievementvalidation_1 = require("../../module/achievement/Achievementvalidation");
+const Achievementcontroller_1 = require("@/module/achievement/Achievementcontroller");
+const auth_1 = require("@/middleware/auth");
+const Achievementvalidation_1 = require("@/module/achievement/Achievementvalidation");
 const achievementRouter = (0, express_1.Router)();
 achievementRouter.use(auth_1.verifyToken);
 // POST /achievements

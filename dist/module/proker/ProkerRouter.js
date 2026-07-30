@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // ProkerRouter.ts
 const express_1 = __importDefault(require("express"));
-const ProkerController_1 = __importDefault(require("../../module/proker/ProkerController"));
+const ProkerController_1 = __importDefault(require("@/module/proker/ProkerController"));
 const prokerRouter = express_1.default.Router();
 // Wrap handlers properly with explicit typing -- Ini eror memang gilerr sia
 prokerRouter.get("/", (req, res, next) => {

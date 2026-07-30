@@ -36,8 +36,33 @@ class AuthService {
             user: {
                 id: user.id,
                 username: user.username,
+                role: user.role,
             },
         };
+    }
+    async profile(user, res) {
+        if (!user?.id) {
+            return res.status(401).json({
+                message: "Unauthorized",
+                status: 401,
+            });
+        }
+        const profile = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: {
+                id: true,
+                username: true,
+                role: true,
+                created_at: true,
+            },
+        });
+        if (!profile) {
+            return res.status(404).json({
+                message: "user not found",
+                status: 404,
+            });
+        }
+        return profile;
     }
     async registerDeveloper(payload, res) {
         try {
@@ -48,9 +73,10 @@ class AuthService {
                     status: 404,
                 });
             }
+            const hashedPassword = await bcrypt_1.default.hash(password, 10);
             const query = await prisma.user.create({
                 data: {
-                    password: password,
+                    password: hashedPassword,
                     role: role,
                     username: username,
                 },
