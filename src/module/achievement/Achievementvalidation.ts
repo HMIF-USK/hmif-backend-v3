@@ -1,15 +1,31 @@
 import { Request, Response, NextFunction } from "express";
 
+const VALID_SCALE_VALUES = [
+  "universitas",
+  "kabupaten_kota",
+  "provinsi",
+  "nasional",
+  "internasional",
+];
+
 export const validateCreateAchievement = (
   req: Request,
   res: Response,
   next: NextFunction
 ): void => {
-  const { title, achievement_date, foto_urls } = req.body;
+  const { title, scale, achievement_date, foto_urls } = req.body;
   const errors: string[] = [];
 
   if (!title || typeof title !== "string" || title.trim() === "") {
     errors.push("title wajib diisi dan harus berupa string");
+  }
+
+  if (!scale) {
+    errors.push("scale wajib diisi");
+  } else if (!VALID_SCALE_VALUES.includes(scale)) {
+    errors.push(
+      `scale tidak valid. Nilai yang diterima: ${VALID_SCALE_VALUES.join(", ")}`
+    );
   }
 
   if (achievement_date && isNaN(Date.parse(achievement_date))) {
@@ -43,7 +59,7 @@ export const validateUpdateAchievement = (
   next: NextFunction
 ): void => {
   const { id } = req.params;
-  const { title, achievement_date, foto_urls } = req.body;
+  const { title, scale, achievement_date, foto_urls } = req.body;
   const errors: string[] = [];
 
   if (isNaN(Number(id))) {
@@ -52,6 +68,12 @@ export const validateUpdateAchievement = (
 
   if (title !== undefined && (typeof title !== "string" || title.trim() === "")) {
     errors.push("title harus berupa string tidak kosong jika disertakan");
+  }
+
+  if (scale !== undefined && !VALID_SCALE_VALUES.includes(scale)) {
+    errors.push(
+      `scale tidak valid. Nilai yang diterima: ${VALID_SCALE_VALUES.join(", ")}`
+    );
   }
 
   if (achievement_date !== undefined && isNaN(Date.parse(achievement_date))) {

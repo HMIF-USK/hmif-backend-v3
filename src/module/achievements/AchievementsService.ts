@@ -1,7 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import { AchievementResponse, GetAchievementsQuery } from "./achievements.types";
-
-const prisma = new PrismaClient();
 
 class AchievementsService {
   /**
