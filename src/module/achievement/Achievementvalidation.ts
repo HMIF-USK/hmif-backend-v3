@@ -42,13 +42,8 @@ export const validateUpdateAchievement = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { id } = req.params;
   const { title, achievement_date, foto_urls } = req.body;
   const errors: string[] = [];
-
-  if (isNaN(Number(id))) {
-    errors.push("ID harus berupa angka");
-  }
 
   if (title !== undefined && (typeof title !== "string" || title.trim() === "")) {
     errors.push("title harus berupa string tidak kosong jika disertakan");
@@ -84,12 +79,5 @@ export const validateDeleteAchievement = (
   res: Response,
   next: NextFunction
 ): void => {
-  const { id } = req.params;
-
-  if (isNaN(Number(id))) {
-    res.status(400).json({ success: false, message: "ID harus berupa angka" });
-    return;
-  }
-
   next();
 };

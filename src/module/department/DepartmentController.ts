@@ -2,6 +2,18 @@ import { Request, Response, RequestHandler } from "express";
 import DepartmentService from "./DepartmentService";
 
 class DepartmentController {
+  public getDepartments: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+    try {
+      const response = await DepartmentService.getAllDepartments();
+
+      res.status(200).json(response);
+    } catch (error: any) {
+      res.status(400).json({
+        message: error.message,
+      });
+    }
+  };
+
   public getDepartmentById: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     try {
       const response = await DepartmentService.getDepartmentById(req.params.id);

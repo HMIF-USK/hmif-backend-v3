@@ -10,6 +10,7 @@ class DepartmentRouter {
   }
 
   private routes() {
+    this.departmentRouter.get("/", DepartmentController.getDepartments);
     this.departmentRouter.get("/:id", DepartmentController.getDepartmentById);
     this.departmentRouter.put("/:id", DepartmentController.updateDepartment);
   }

@@ -6,6 +6,19 @@ import { Response } from "express";
 const prisma = new PrismaClient();
 
 class DepartmentService {
+  //GET all departments
+  public async getAllDepartments() {
+    const departments = await prisma.departement.findMany({
+      include: { fotoDepartements: true },
+      orderBy: { name: "asc" },
+    });
+
+    return {
+      message: "Success get departments",
+      data: departments,
+    };
+  }
+
   //GET department by id
   public async getDepartmentById(id: string) {
     const department = await prisma.departement.findUnique({

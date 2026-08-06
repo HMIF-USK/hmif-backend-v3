@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from "express";
+import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
 import swaggerUi from "swagger-ui-express";
@@ -30,6 +30,19 @@ class App {
         timestamp: new Date().toISOString(),
       });
     });
+
+    // Controller yang memakai next(error) tanpa handler ini akan membalas HTML,
+    // padahal frontend selalu mem-parse JSON.
+    this.app.use(
+      (error: any, req: Request, res: Response, next: NextFunction) => {
+        console.error("Unhandled error:", error);
+
+        res.status(error?.status || 500).json({
+          status: error?.status || 500,
+          message: error?.message || "Internal server error",
+        });
+      },
+    );
   }
 }
 

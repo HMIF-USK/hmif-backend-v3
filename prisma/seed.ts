@@ -3,48 +3,54 @@ import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+const DEPARTEMENTS = [
+  ["DPH", "Dewan Pengurus Harian"],
+  ["PPM", "Pengembangan Potensi Mahasiswa"],
+  ["KOMINKRAF", "Komunikasi, Informasi dan Ekonomi Kreatif"],
+  ["PKM", "Pengelola Kesejahteraan Mahasiswa"],
+  ["SOSMAS", "Sosial Masyarakat"],
+  ["HUAL", "Hubungan Alumni"],
+  ["MBA", "Minat dan Bakat"],
+  ["KEAGAMAAN", "Keagamaan"],
+  ["ADM", "Administrasi"],
+];
+
 async function main() {
-  // 1. Create a department first since User requires it
-  const adminDepartment = await prisma.departement.upsert({
-    where: { id: "dept-admin-1" },
-    update: {},
-    create: {
-      id: "dept-admin-1",
-      name: "Admin / Default",
-      description: "Default department for superusers",
-    },
-  });
+  // 1. User admin (departement sekarang yang menunjuk ke user, bukan sebaliknya)
+  const username = process.env.SEED_USERNAME || "hmifusk";
+  const password = process.env.SEED_PASSWORD || "test123";
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-  // 2. Hash the password
-  const hashedPassword = await bcrypt.hash("test123", 10);
+  const existing = await prisma.user.findFirst({ where: { username } });
 
-  // 3. Create or update the user
-  const existingUser = await prisma.user.findFirst({
-    where: { username: "hmifusk" },
-  });
+  const user = existing
+    ? await prisma.user.update({
+        where: { id: existing.id },
+        data: { password: hashedPassword, role: "superUser" },
+      })
+    : await prisma.user.create({
+        data: { username, password: hashedPassword, role: "superUser" },
+      });
 
-  if (!existingUser) {
-    const user = await prisma.user.create({
-      data: {
-        username: "hmifusk",
-        password: hashedPassword,
-        departement_id: adminDepartment.id,
-      },
-    });
-    console.log("Created user hmifusk!");
-    console.log({ user });
-  } else {
-    const user = await prisma.user.update({
-      where: { id: existingUser.id },
-      data: {
-        password: hashedPassword,
-        departement_id: adminDepartment.id,
-      },
-    });
-    console.log("Updated user hmifusk!");
-    console.log({ user });
+  console.log(`User ${username} siap:`, user.id);
+
+  // 2. Departemen — dipakai frontend sebagai sumber dropdown & pemilik Proker
+  for (const [name, description] of DEPARTEMENTS) {
+    const found = await prisma.departement.findFirst({ where: { name } });
+
+    if (found) {
+      await prisma.departement.update({
+        where: { id: found.id },
+        data: { description, user_id: user.id },
+      });
+    } else {
+      await prisma.departement.create({
+        data: { name, description, user_id: user.id },
+      });
+    }
   }
 
+  console.log(`${DEPARTEMENTS.length} departemen siap.`);
   console.log("Seeding successful!");
 }
 

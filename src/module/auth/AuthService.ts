@@ -60,7 +60,7 @@ class AuthService {
 
       const query = await prisma.user.create({
         data: {
-          password: password,
+          password: await bcrypt.hash(password, 10),
           role: role,
           username: username,
         },
