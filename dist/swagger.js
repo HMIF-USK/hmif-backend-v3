@@ -9,7 +9,7 @@ const options = {
     definition: {
         openapi: "3.0.0",
         info: {
-            title: "Boilerpad API",
+            title: "Hmif USK API",
             version: "1.0.0",
             description: "Express TypeScript API documentation generated with Swagger.",
         },
@@ -68,7 +68,6 @@ const options = {
                 },
             },
         },
-        // Definisikan endpoint dan operasi API di sini ygy
         paths: {
             ...proker_docs_1.prokerPaths,
         },
