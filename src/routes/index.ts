@@ -13,4 +13,4 @@ router.use("/achievements", achievementRouter);
 router.use("/departments", departmentRouter);
 router.use("/prokers", prokerRouter);
 
-export default router;
+export default router; 
