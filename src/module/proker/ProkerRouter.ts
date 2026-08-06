@@ -1,6 +1,6 @@
 // ProkerRouter.ts
 import express, { Request, Response, NextFunction } from "express";
-import prokerController from "@/module/proker/ProkerController";
+import prokerController from "./ProkerController";
 
 const prokerRouter = express.Router();
 

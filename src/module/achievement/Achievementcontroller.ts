@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { achievementService } from "@/module/achievement/Achievementservice";
+import { achievementService } from "./Achievementservice";
 
 export const achievementController = {
   // POST /achievements

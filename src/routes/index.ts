@@ -1,9 +1,9 @@
 import { Router } from "express";
-import authRouter from "@/module/auth/AuthRouter";
-import activityRouter from "@/module/activities/ActivityRouter";
-import achievementRouter from "@/module/achievement/Achievementrouter";
-import departmentRouter from "@/module/department/DepartmentRouter";
-import prokerRouter from "@/module/proker/ProkerRouter";
+import authRouter from "../module/auth/AuthRouter";
+import activityRouter from "../module/activities/ActivityRouter";
+import achievementRouter from "../module/achievement/Achievementrouter";
+import departmentRouter from "../module/department/DepartmentRouter";
+import prokerRouter from "../module/proker/ProkerRouter";
 
 const router = Router();
 

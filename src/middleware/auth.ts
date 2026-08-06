@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction, RequestHandler } from "express";
-import { JwtPayload } from "@/types/index";
+import { JwtPayload } from "../types/index";
 
 // Extend Request interface untuk menambahkan user property
 declare global {

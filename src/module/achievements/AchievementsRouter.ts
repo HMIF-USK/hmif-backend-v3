@@ -1,5 +1,5 @@
 import express from "express";
-import AchievementsController from "@/module/achievements/AchievementsController";
+import AchievementsController from "./AchievementsController";
 
 class AchievementsRouter {
   public achievementsRouter;

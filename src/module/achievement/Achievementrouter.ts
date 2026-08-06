@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { achievementController } from "@/module/achievement/Achievementcontroller";
-import { verifyToken } from "@/middleware/auth";
+import { achievementController } from "./Achievementcontroller";
+import { verifyToken } from "../../middleware/auth";
 import {
   validateCreateAchievement,
   validateUpdateAchievement,
   validateDeleteAchievement,
-} from "@/module/achievement/Achievementvalidation";
+} from "./Achievementvalidation";
 
 const achievementRouter = Router();
 

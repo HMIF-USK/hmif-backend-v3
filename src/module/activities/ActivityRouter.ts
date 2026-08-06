@@ -1,5 +1,5 @@
 import express from "express";
-import ActivityController from "@/module/activities/ActivityController";
+import ActivityController from "./ActivityController";
 
 class ActivityRouter {
   public activityRouter;

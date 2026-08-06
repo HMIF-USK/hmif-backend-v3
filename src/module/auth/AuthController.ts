@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { JwtPayload } from "@/types";
+import { JwtPayload } from "../../types";
 import AuthService from "./AuthService";
 import { PickRegister } from "./auth.types";
 

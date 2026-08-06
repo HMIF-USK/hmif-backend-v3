@@ -1,5 +1,5 @@
 import express from "express";
-import AuthController from "@/module/auth/AuthController";
+import AuthController from "./AuthController";
 
 class AuthRouter {
   public authRouter;
