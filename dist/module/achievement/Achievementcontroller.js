@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.achievementController = void 0;
-const Achievementservice_1 = require("../../module/achievement/Achievementservice");
+const Achievementservice_1 = require("@/module/achievement/Achievementservice");
 exports.achievementController = {
     // POST /achievements
     async create(req, res, next) {

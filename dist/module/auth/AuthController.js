@@ -26,6 +26,31 @@ class AuthController {
             return;
         }
     };
+    profile = async (req, res) => {
+        try {
+            const response = await AuthService_1.default.profile(req.user, res);
+            if (!response) {
+                res.status(400).json({
+                    message: "service not found",
+                    status: 400,
+                });
+                return;
+            }
+            res.status(200).json({
+                message: "profile retrieved successfully",
+                data: response,
+                status: 200,
+            });
+        }
+        catch (error) {
+            res.status(500).json({
+                message: "server internal error",
+                status: 500,
+                error,
+            });
+            return;
+        }
+    };
     register = async (req, res) => {
         try {
             const payload = req.body;
