@@ -7,8 +7,9 @@ class ProkerController {
         try {
             const data = await ProkerService.getAllProkers();
             res.status(200).json({ message: "Success", data });
-        } catch (error) {
-            res.status(500).json({ message: "Internal server error" });
+        } catch (error: any) {
+            console.error("ERROR GET PROKERS:", error); // <-- Tambahkan ini untuk intip penyakitnya
+            res.status(500).json({ message: "Internal server error", error: error.message });
         }
     };
 
