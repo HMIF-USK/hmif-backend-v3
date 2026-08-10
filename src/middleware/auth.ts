@@ -1,6 +1,9 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction, RequestHandler } from "express";
 import { JwtPayload } from "../types/index";
+import { userrRole } from "@prisma/client";
+
+const JWT_SECRET = process.env.JWT_SECRET || "supersecretkey";
 
 // Extend Request interface untuk menambahkan user property
 declare global {
@@ -29,18 +32,8 @@ export const verifyToken = (
       return;
     }
 
-    // Validasi JWT_SECRET
-    if (!process.env.JWT_SECRET) {
-      console.error("JWT_SECRET is not defined in environment variables");
-      res.status(500).json({
-        status: 500,
-        message: "Server configuration error.",
-      });
-      return;
-    }
-
     // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
+    const decoded = jwt.verify(token, JWT_SECRET) as JwtPayload;
 
     // Simpan payload ke dalam req.user
     req.user = decoded;
@@ -67,25 +60,22 @@ export const verifyToken = (
   }
 };
 
-// Middleware ROle
-// export const RoleBase = (...allowedRoles: RoleType[]): RequestHandler => {
-//   return (req: Request, res: Response, next: NextFunction): void => {
-//     if (!req.user) {
-//       res.status(401).json({
-//         status: 401,
-//         message: "Unauthorized. User not authenticated.",
-//       });
-//       return;
-//     }
+// Batasi akses ke role tertentu. Dipakai setelah verifyToken.
+export const requireRole = (...allowedRoles: userrRole[]): RequestHandler => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.user) {
+      res.status(401).json({ status: 401, message: "Unauthorized. User not authenticated." });
+      return;
+    }
 
-//     if (allowedRoles.length > 0 && !allowedRoles.includes(req.user.role)) {
-//       res.status(403).json({
-//         status: 403,
-//         message: "Forbidden. Insufficient role privileges.",
-//       });
-//       return;
-//     }
+    if (!allowedRoles.includes(req.user.role)) {
+      res.status(403).json({
+        status: 403,
+        message: "Forbidden. Role kamu tidak punya akses ke resource ini.",
+      });
+      return;
+    }
 
-//     next();
-//   };
-// };
+    next();
+  };
+};

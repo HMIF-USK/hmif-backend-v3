@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { achievementController } from "./Achievementcontroller";
-import { verifyToken } from "../../middleware/auth";
+import { verifyToken, requireRole } from "../../middleware/auth";
 import {
   validateCreateAchievement,
   validateUpdateAchievement,
@@ -10,6 +10,8 @@ import {
 const achievementRouter = Router();
 
 achievementRouter.use(verifyToken);
+// Hanya departemen MBA (dan superUser) yang boleh kelola achievement.
+achievementRouter.use(requireRole("mba", "superUser"));
 
 // POST /achievements
 achievementRouter.post("/", validateCreateAchievement, achievementController.create);

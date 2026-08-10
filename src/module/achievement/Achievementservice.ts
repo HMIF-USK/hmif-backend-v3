@@ -6,6 +6,8 @@ interface CreateAchievementInput {
   location: string;
   achiever_name: string;
   achievement_date: Date;
+  achievement_end_date?: Date | null;
+  level?: string | null;
   created_by_user_id: string;
   foto_urls?: string[];
 }
@@ -16,6 +18,8 @@ interface UpdateAchievementInput {
   location?: string;
   achiever_name?: string;
   achievement_date?: Date;
+  achievement_end_date?: Date | null;
+  level?: string | null;
   foto_urls?: string[];
 }
 

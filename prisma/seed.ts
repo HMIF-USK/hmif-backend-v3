@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, userrRole } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
@@ -15,29 +15,37 @@ const DEPARTEMENTS = [
   ["ADM", "Administrasi"],
 ];
 
-async function main() {
-  // 1. User admin (departement sekarang yang menunjuk ke user, bukan sebaliknya)
-  const username = process.env.SEED_USERNAME || "hmifusk";
-  const password = process.env.SEED_PASSWORD || "test123";
+async function upsertUser(username: string, password: string, role: userrRole) {
   const hashedPassword = await bcrypt.hash(password, 10);
-
   const existing = await prisma.user.findFirst({ where: { username } });
 
-  const user = existing
-    ? await prisma.user.update({
+  return existing
+    ? prisma.user.update({
         where: { id: existing.id },
-        data: { password: hashedPassword, role: "superUser" },
+        data: { password: hashedPassword, role },
       })
-    : await prisma.user.create({
-        data: { username, password: hashedPassword, role: "superUser" },
-      });
+    : prisma.user.create({ data: { username, password: hashedPassword, role } });
+}
 
-  console.log(`User ${username} siap:`, user.id);
+async function main() {
+  // 1. Super user
+  const superUser = await upsertUser(
+    process.env.SEED_USERNAME || "hmifusk",
+    process.env.SEED_PASSWORD || "test123",
+    "superUser",
+  );
+  console.log(`superUser ${superUser.username} siap`);
 
-  // 2. Departemen — dipakai frontend sebagai sumber dropdown & pemilik Proker
+  // 2. Satu akun per departemen. MBA dapat role "mba" (satu-satunya yang boleh
+  //    upload achievement), sisanya "departement" (hanya event/proker).
+  const deptPassword = process.env.SEED_DEPT_PASSWORD || "test123";
+
   for (const [name, description] of DEPARTEMENTS) {
-    const found = await prisma.departement.findFirst({ where: { name } });
+    const username = name.toLowerCase();
+    const role: userrRole = name === "MBA" ? "mba" : "departement";
+    const user = await upsertUser(username, deptPassword, role);
 
+    const found = await prisma.departement.findFirst({ where: { name } });
     if (found) {
       await prisma.departement.update({
         where: { id: found.id },
@@ -48,9 +56,10 @@ async function main() {
         data: { name, description, user_id: user.id },
       });
     }
+
+    console.log(`  ${name} -> login "${username}" / "${deptPassword}" (${role})`);
   }
 
-  console.log(`${DEPARTEMENTS.length} departemen siap.`);
   console.log("Seeding successful!");
 }
 

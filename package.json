@@ -36,7 +36,7 @@
   },
   "scripts": {
     "start": "node dist/server.js",
-    "build": "npx prisma generate && tsc",
+    "build": "npx prisma generate && npx prisma migrate deploy && tsc",
     "dev": "nodemon --watch src --ext ts --exec \"ts-node -r tsconfig-paths/register src/server.ts\"",
     "generate": "npx prisma generate",
     "seed": "npx prisma db seed",

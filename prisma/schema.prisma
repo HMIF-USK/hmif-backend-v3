@@ -16,6 +16,7 @@ enum prokerStatus {
 enum userrRole {
   mba
   superUser
+  departement
 }
 
 model departement {
@@ -56,6 +57,8 @@ model Achievement {
   description        String
   achiever_name      String
   achievement_date   DateTime
+  achievement_end_date DateTime?
+  level              String?
   created_at         DateTime          @default(now())
   fotoAchievements   fotoAchievement[]
 }

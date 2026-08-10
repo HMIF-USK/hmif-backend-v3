@@ -1,6 +1,7 @@
 // ProkerRouter.ts
 import express, { Request, Response, NextFunction } from "express";
 import prokerController from "./ProkerController";
+import { verifyToken } from "../../middleware/auth";
 
 const prokerRouter = express.Router();
 
@@ -9,7 +10,7 @@ prokerRouter.get("/", (req: Request, res: Response, next: NextFunction) => {
   prokerController.getProkers(req, res).catch(next);
 });
 
-prokerRouter.post("/", (req: Request, res: Response, next: NextFunction) => {
+prokerRouter.post("/", verifyToken, (req: Request, res: Response, next: NextFunction) => {
   prokerController.postProker(req, res).catch(next);
 });
 
@@ -19,12 +20,12 @@ prokerRouter.get("/:id", (req: Request, res: Response, next: NextFunction) => {
 });
 
 // Endpoint untuk menghapus Proker berdasarkan ID
-prokerRouter.delete("/:id", (req: Request, res: Response, next: NextFunction) => {
+prokerRouter.delete("/:id", verifyToken, (req: Request, res: Response, next: NextFunction) => {
   prokerController.deleteProker(req, res).catch(next);
 });
 
 // Endpoint untuk memperbarui Proker berdasarkan ID
-prokerRouter.put("/:id", (req: Request, res: Response, next: NextFunction) => {
+prokerRouter.put("/:id", verifyToken, (req: Request, res: Response, next: NextFunction) => {
   prokerController.updateProker(req, res).catch(next);
 });
 

@@ -11,7 +11,16 @@ export const achievementController = {
         return;
       }
 
-      const { title, description, location, achiever_name, achievement_date, foto_urls } = req.body;
+      const {
+        title,
+        description,
+        location,
+        achiever_name,
+        achievement_date,
+        achievement_end_date,
+        level,
+        foto_urls,
+      } = req.body;
 
       const achievement = await achievementService.create({
         title,
@@ -19,6 +28,8 @@ export const achievementController = {
         location,
         achiever_name,
         achievement_date: new Date(achievement_date),
+        achievement_end_date: achievement_end_date ? new Date(achievement_end_date) : null,
+        level: level ?? null,
         created_by_user_id: userId,
         foto_urls: foto_urls || [],
       });
@@ -50,7 +61,16 @@ export const achievementController = {
         return;
       }
 
-      const { title, description, location, achiever_name, achievement_date, foto_urls } = req.body;
+      const {
+        title,
+        description,
+        location,
+        achiever_name,
+        achievement_date,
+        achievement_end_date,
+        level,
+        foto_urls,
+      } = req.body;
 
       const updated = await achievementService.update(id, {
         title,
@@ -58,6 +78,8 @@ export const achievementController = {
         location,
         achiever_name,
         achievement_date: achievement_date ? new Date(achievement_date) : undefined,
+        achievement_end_date: achievement_end_date ? new Date(achievement_end_date) : undefined,
+        level,
         foto_urls,
       });
 

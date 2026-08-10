@@ -9,7 +9,7 @@ export interface IAuth {
   created_at: Date;
 }
 
-export type JwtPayload = Pick<IAuth, "id" | "username">;
+export type JwtPayload = Pick<IAuth, "id" | "username" | "role">;
 export type PickRegister = Pick<IAuth, "username" | "password" | "role">;
 export type PickLogin = Pick<IAuth, "username" | "password">;
 export type PickLogout = Pick<IAuth, "id">;
