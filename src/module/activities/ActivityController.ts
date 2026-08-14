@@ -5,7 +5,11 @@ class ActivityController {
 
   public async create(req: Request, res: Response) {
     try {
-      const response = await ActivityService.create(req.body);
+      // Pemiliknya diambil dari token, bukan dari body — body bisa dipalsukan client.
+      const response = await ActivityService.create({
+        ...req.body,
+        created_by_user_id: req.user!.id,
+      });
       res.status(201).json(response);
     } catch (error: any) {
       res.status(400).json({ message: error.message });

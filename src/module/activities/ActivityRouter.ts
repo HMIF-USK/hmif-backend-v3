@@ -1,6 +1,9 @@
 import express from "express";
 import ActivityController from "./ActivityController";
-import { verifyToken } from "../../middleware/auth";
+import { verifyToken, requireDepartement } from "../../middleware/auth";
+
+// Kegiatan Informatic Club diisi departemen PPM; baca tetap publik.
+const onlyPPM = [verifyToken, requireDepartement("PPM")];
 
 class ActivityRouter {
   public activityRouter;
@@ -11,11 +14,11 @@ class ActivityRouter {
   }
 
   private routes() {
-    this.activityRouter.post("/", verifyToken, ActivityController.create);
-    this.activityRouter.get("/", ActivityController.getAll);       // supports ?division=ppm
+    this.activityRouter.post("/", onlyPPM, ActivityController.create);
+    this.activityRouter.get("/", ActivityController.getAll);       // supports ?division=
     this.activityRouter.get("/:id", ActivityController.getById);
-    this.activityRouter.put("/:id", verifyToken, ActivityController.update);
-    this.activityRouter.delete("/:id", verifyToken, ActivityController.delete);
+    this.activityRouter.put("/:id", onlyPPM, ActivityController.update);
+    this.activityRouter.delete("/:id", onlyPPM, ActivityController.delete);
   }
 }
 
