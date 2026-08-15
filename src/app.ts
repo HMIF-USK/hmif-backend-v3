@@ -15,8 +15,8 @@ class App {
 
   private middlewares(): void {
     this.app.use(cors({ origin: "*", optionsSuccessStatus: 200 }));
-    this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+    this.app.use(express.json({ limit: "10mb" }));
     this.app.use("/api", router);
     this.app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
   }

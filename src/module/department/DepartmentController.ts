@@ -44,6 +44,7 @@ class DepartmentController {
         req.params.id,
         req.body,
         res,
+        req.user,
       );
 
       if (!response) {
@@ -56,7 +57,7 @@ class DepartmentController {
 
       res.status(200).json(response);
     } catch (error: any) {
-      res.status(400).json({
+      res.status(error?.status || 400).json({
         message: error.message,
       });
     }
@@ -64,11 +65,11 @@ class DepartmentController {
 
   public addPhoto: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     try {
-      const response = await DepartmentService.addPhoto(req.params.id, req.body);
+      const response = await DepartmentService.addPhoto(req.params.id, req.body, req.user);
 
       res.status(201).json(response);
     } catch (error: any) {
-      res.status(400).json({
+      res.status(error?.status || 400).json({
         message: error.message,
       });
     }
@@ -76,11 +77,11 @@ class DepartmentController {
 
   public deletePhoto: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     try {
-      const response = await DepartmentService.deletePhoto(req.params.photoId);
+      const response = await DepartmentService.deletePhoto(req.params.photoId, req.user);
 
       res.status(200).json(response);
     } catch (error: any) {
-      res.status(400).json({
+      res.status(error?.status || 400).json({
         message: error.message,
       });
     }
@@ -88,11 +89,11 @@ class DepartmentController {
 
   public syncPhotos: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     try {
-      const response = await DepartmentService.syncPhotos(req.params.id, req.body.photos);
+      const response = await DepartmentService.syncPhotos(req.params.id, req.body.photos, req.user);
 
       res.status(200).json(response);
     } catch (error: any) {
-      res.status(400).json({
+      res.status(error?.status || 400).json({
         message: error.message,
       });
     }

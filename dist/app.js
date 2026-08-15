@@ -17,8 +17,8 @@ class App {
     }
     middlewares() {
         this.app.use((0, cors_1.default)({ origin: "*", optionsSuccessStatus: 200 }));
-        this.app.use(express_1.default.urlencoded({ extended: true }));
-        this.app.use(express_1.default.json());
+        this.app.use(express_1.default.urlencoded({ extended: true, limit: "10mb" }));
+        this.app.use(express_1.default.json({ limit: "10mb" }));
         this.app.use("/api", routes_1.default);
         this.app.use("/api-docs", swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swagger_1.default));
     }

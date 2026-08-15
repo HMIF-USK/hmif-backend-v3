@@ -40,7 +40,7 @@ class DepartmentController {
     };
     updateDepartment = async (req, res) => {
         try {
-            const response = await DepartmentService_1.default.updateDepartment(req.params.id, req.body, res);
+            const response = await DepartmentService_1.default.updateDepartment(req.params.id, req.body, res, req.user);
             if (!response) {
                 res.status(400).json({
                     status: 400,
@@ -51,40 +51,40 @@ class DepartmentController {
             res.status(200).json(response);
         }
         catch (error) {
-            res.status(400).json({
+            res.status(error?.status || 400).json({
                 message: error.message,
             });
         }
     };
     addPhoto = async (req, res) => {
         try {
-            const response = await DepartmentService_1.default.addPhoto(req.params.id, req.body);
+            const response = await DepartmentService_1.default.addPhoto(req.params.id, req.body, req.user);
             res.status(201).json(response);
         }
         catch (error) {
-            res.status(400).json({
+            res.status(error?.status || 400).json({
                 message: error.message,
             });
         }
     };
     deletePhoto = async (req, res) => {
         try {
-            const response = await DepartmentService_1.default.deletePhoto(req.params.photoId);
+            const response = await DepartmentService_1.default.deletePhoto(req.params.photoId, req.user);
             res.status(200).json(response);
         }
         catch (error) {
-            res.status(400).json({
+            res.status(error?.status || 400).json({
                 message: error.message,
             });
         }
     };
     syncPhotos = async (req, res) => {
         try {
-            const response = await DepartmentService_1.default.syncPhotos(req.params.id, req.body.photos);
+            const response = await DepartmentService_1.default.syncPhotos(req.params.id, req.body.photos, req.user);
             res.status(200).json(response);
         }
         catch (error) {
-            res.status(400).json({
+            res.status(error?.status || 400).json({
                 message: error.message,
             });
         }

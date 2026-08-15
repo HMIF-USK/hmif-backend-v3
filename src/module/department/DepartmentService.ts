@@ -70,12 +70,30 @@ class DepartmentService {
     };
   }
 
+  private async checkOwnership(departmentId: string, user?: { id: string; role: string }) {
+    if (!user) return;
+    if (user.role === "superUser") return;
+
+    const dept = await prisma.departement.findUnique({ where: { id: departmentId } });
+    if (!dept) {
+      throw new Error("Department not found");
+    }
+    if (dept.user_id !== user.id) {
+      const err: any = new Error("Forbidden. Kamu hanya boleh mengelola departemenmu sendiri.");
+      err.status = 403;
+      throw err;
+    }
+  }
+
   // PUT update department
   public async updateDepartment(
     id: string,
     payload: PickUpdateDepartment,
     res: Response,
+    user?: { id: string; role: string },
   ) {
+    await this.checkOwnership(id, user);
+
     const department = await prisma.departement.update({
       where: {
         id,
@@ -98,7 +116,9 @@ class DepartmentService {
   }
 
   // POST add photo
-  public async addPhoto(departmentId: string, payload: IAddPhotoPayload) {
+  public async addPhoto(departmentId: string, payload: IAddPhotoPayload, user?: { id: string; role: string }) {
+    await this.checkOwnership(departmentId, user);
+
     const photo = await prisma.fotoDepartement.create({
       data: {
         departement_id: departmentId,
@@ -114,10 +134,14 @@ class DepartmentService {
   }
 
   // DELETE photo
-  public async deletePhoto(photoId: string) {
-    await prisma.fotoDepartement.delete({
-      where: { id: photoId },
-    });
+  public async deletePhoto(photoId: string, user?: { id: string; role: string }) {
+    const photo = await prisma.fotoDepartement.findUnique({ where: { id: photoId } });
+    if (photo) {
+      await this.checkOwnership(photo.departement_id, user);
+      await prisma.fotoDepartement.delete({
+        where: { id: photoId },
+      });
+    }
 
     return {
       message: "Success delete photo",
@@ -125,7 +149,9 @@ class DepartmentService {
   }
 
   // PUT sync photos
-  public async syncPhotos(departmentId: string, photos: IDepartmentPhoto[]) {
+  public async syncPhotos(departmentId: string, photos: IDepartmentPhoto[], user?: { id: string; role: string }) {
+    await this.checkOwnership(departmentId, user);
+
     await prisma.fotoDepartement.deleteMany({
       where: { departement_id: departmentId },
     });
