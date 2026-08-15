@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.achievementController = void 0;
-const Achievementservice_1 = require("../../module/achievement/Achievementservice");
+const Achievementservice_1 = require("./Achievementservice");
 exports.achievementController = {
     // POST /achievements
     async create(req, res, next) {
@@ -11,13 +11,15 @@ exports.achievementController = {
                 res.status(401).json({ success: false, message: "Unauthorized" });
                 return;
             }
-            const { title, description, location, achiever_name, achievement_date, foto_urls } = req.body;
+            const { title, description, location, achiever_name, achievement_date, achievement_end_date, level, foto_urls, } = req.body;
             const achievement = await Achievementservice_1.achievementService.create({
                 title,
                 description,
                 location,
                 achiever_name,
                 achievement_date: new Date(achievement_date),
+                achievement_end_date: achievement_end_date ? new Date(achievement_end_date) : null,
+                level: level ?? null,
                 created_by_user_id: userId,
                 foto_urls: foto_urls || [],
             });
@@ -45,13 +47,15 @@ exports.achievementController = {
                 res.status(404).json({ success: false, message: "Achievement tidak ditemukan" });
                 return;
             }
-            const { title, description, location, achiever_name, achievement_date, foto_urls } = req.body;
+            const { title, description, location, achiever_name, achievement_date, achievement_end_date, level, foto_urls, } = req.body;
             const updated = await Achievementservice_1.achievementService.update(id, {
                 title,
                 description,
                 location,
                 achiever_name,
                 achievement_date: achievement_date ? new Date(achievement_date) : undefined,
+                achievement_end_date: achievement_end_date ? new Date(achievement_end_date) : undefined,
+                level,
                 foto_urls,
             });
             res.status(200).json({

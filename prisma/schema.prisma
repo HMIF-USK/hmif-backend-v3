@@ -22,11 +22,12 @@ enum userrRole {
 model departement {
   id               String            @id @default(uuid())
   name             String
+  slug             String?           @unique
   description      String
-  user_id String
+  user_id          String
   fotoDepartements fotoDepartement[]
   prokers          Proker[]
-  user user @relation(fields: [user_id], references: [id])
+  user             user              @relation(fields: [user_id], references: [id])
 }
 
 model fotoDepartement {

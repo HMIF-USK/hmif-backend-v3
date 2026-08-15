@@ -7,7 +7,11 @@ const ActivityService_1 = __importDefault(require("./ActivityService"));
 class ActivityController {
     async create(req, res) {
         try {
-            const response = await ActivityService_1.default.create(req.body);
+            // Pemiliknya diambil dari token, bukan dari body — body bisa dipalsukan client.
+            const response = await ActivityService_1.default.create({
+                ...req.body,
+                created_by_user_id: req.user.id,
+            });
             res.status(201).json(response);
         }
         catch (error) {

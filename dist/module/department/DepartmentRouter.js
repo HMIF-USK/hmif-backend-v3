@@ -12,8 +12,13 @@ class DepartmentRouter {
         this.routes();
     }
     routes() {
+        this.departmentRouter.get("/", DepartmentController_1.default.getDepartments);
+        this.departmentRouter.get("/slug/:slug", DepartmentController_1.default.getDepartmentBySlug);
         this.departmentRouter.get("/:id", DepartmentController_1.default.getDepartmentById);
         this.departmentRouter.put("/:id", DepartmentController_1.default.updateDepartment);
+        this.departmentRouter.post("/:id/photos", DepartmentController_1.default.addPhoto);
+        this.departmentRouter.delete("/:id/photos/:photoId", DepartmentController_1.default.deletePhoto);
+        this.departmentRouter.put("/:id/photos", DepartmentController_1.default.syncPhotos);
     }
 }
 exports.default = new DepartmentRouter().departmentRouter;

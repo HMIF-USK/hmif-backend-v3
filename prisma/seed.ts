@@ -15,6 +15,9 @@ const DEPARTEMENTS = [
   ["ADM", "Administrasi"],
 ];
 
+/** Pola sandi akun departemen: <username>hmif2026, mis. ppm -> ppmhmif2026 */
+const passwordFor = (username: string) => `${username}hmif2026`;
+
 async function upsertUser(username: string, password: string, role: userrRole) {
   const hashedPassword = await bcrypt.hash(password, 10);
   const existing = await prisma.user.findFirst({ where: { username } });
@@ -28,20 +31,21 @@ async function upsertUser(username: string, password: string, role: userrRole) {
 }
 
 async function main() {
-  // 1. Super user
+  // 1. Super user — sandinya "adminhmif2026", di luar pola <username>hmif2026
+  //    karena username-nya bukan "admin".
+  const superUserPassword = process.env.SEED_PASSWORD || "adminhmif2026";
   const superUser = await upsertUser(
     process.env.SEED_USERNAME || "hmifusk",
-    process.env.SEED_PASSWORD || "test123",
+    superUserPassword,
     "superUser",
   );
-  console.log(`superUser ${superUser.username} siap`);
+  console.log(`superUser -> login "${superUser.username}" / "${superUserPassword}"`);
 
   // 2. Satu akun per departemen. MBA dapat role "mba" (satu-satunya yang boleh
   //    upload achievement), sisanya "departement" (hanya event/proker).
-  const deptPassword = process.env.SEED_DEPT_PASSWORD || "test123";
-
   for (const [name, description] of DEPARTEMENTS) {
     const username = name.toLowerCase();
+    const deptPassword = passwordFor(username);
     const role: userrRole = name === "MBA" ? "mba" : "departement";
     const user = await upsertUser(username, deptPassword, role);
 

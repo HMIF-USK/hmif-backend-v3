@@ -5,13 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 // ProkerRouter.ts
 const express_1 = __importDefault(require("express"));
-const ProkerController_1 = __importDefault(require("../../module/proker/ProkerController"));
+const ProkerController_1 = __importDefault(require("./ProkerController"));
+const auth_1 = require("../../middleware/auth");
 const prokerRouter = express_1.default.Router();
 // Wrap handlers properly with explicit typing -- Ini eror memang gilerr sia
 prokerRouter.get("/", (req, res, next) => {
     ProkerController_1.default.getProkers(req, res).catch(next);
 });
-prokerRouter.post("/", (req, res, next) => {
+prokerRouter.post("/", auth_1.verifyToken, (req, res, next) => {
     ProkerController_1.default.postProker(req, res).catch(next);
 });
 // Tambahkan di dalam file ProkerRouter.ts kamu
@@ -19,11 +20,11 @@ prokerRouter.get("/:id", (req, res, next) => {
     ProkerController_1.default.getProkerById(req, res).catch(next);
 });
 // Endpoint untuk menghapus Proker berdasarkan ID
-prokerRouter.delete("/:id", (req, res, next) => {
+prokerRouter.delete("/:id", auth_1.verifyToken, (req, res, next) => {
     ProkerController_1.default.deleteProker(req, res).catch(next);
 });
 // Endpoint untuk memperbarui Proker berdasarkan ID
-prokerRouter.put("/:id", (req, res, next) => {
+prokerRouter.put("/:id", auth_1.verifyToken, (req, res, next) => {
     ProkerController_1.default.updateProker(req, res).catch(next);
 });
 exports.default = prokerRouter;

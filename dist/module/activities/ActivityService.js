@@ -8,6 +8,7 @@ class ActivityService {
         const activity = await prisma.activity.create({
             data: {
                 ...activityData,
+                location: activityData.location ?? "",
                 event_start: new Date(activityData.event_start),
                 event_end: new Date(activityData.event_end),
                 fotoActivities: photos?.length

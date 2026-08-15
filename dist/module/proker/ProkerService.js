@@ -6,8 +6,17 @@ class ProkerService {
     async getAllProkers() {
         // Kita gunakan include agar data departement-nya juga ikut terbawa
         return await prisma.proker.findMany({
-            include: { departement: true },
+            include: { departement: true, fotoProkers: true },
+            orderBy: { event_start: "desc" },
         });
+    }
+    /** Satu akun departemen = satu baris departement (lihat prisma/seed.ts). */
+    async findDepartementIdByUser(userId) {
+        const departement = await prisma.departement.findFirst({
+            where: { user_id: userId },
+            select: { id: true },
+        });
+        return departement?.id ?? null;
     }
     async getProkerById(id) {
         return await prisma.proker.findUnique({
@@ -43,12 +52,21 @@ class ProkerService {
         });
     }
     async updateProker(id, data) {
+        const { photos, ...prokerData } = data;
+        // Foto diganti seluruhnya, bukan ditambah — sama seperti update achievement.
+        if (photos !== undefined) {
+            await prisma.fotoProker.deleteMany({ where: { proker_id: id } });
+        }
         return await prisma.proker.update({
             where: { id },
             data: {
-                ...data,
+                ...prokerData,
+                fotoProkers: photos !== undefined
+                    ? { create: photos.map((url) => ({ url })) }
+                    : undefined,
                 updated_at: new Date() // Pastikan waktu update tercatat
-            }
+            },
+            include: { fotoProkers: true }
         });
     }
 }

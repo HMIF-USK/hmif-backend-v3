@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
 const proker_docs_1 = require("./docs/proker.docs");
+const achievement_docs_1 = require("./docs/achievement.docs");
 const options = {
     definition: {
         openapi: "3.0.0",
@@ -70,6 +71,7 @@ const options = {
         },
         paths: {
             ...proker_docs_1.prokerPaths,
+            ...achievement_docs_1.achievementPaths,
         },
     },
     apis: [

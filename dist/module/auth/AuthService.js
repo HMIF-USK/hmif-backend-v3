@@ -27,7 +27,7 @@ class AuthService {
                 status: 400,
             });
         }
-        const token = jsonwebtoken_1.default.sign({ id: user.id, username: user.username }, JWT_SECRET, {
+        const token = jsonwebtoken_1.default.sign({ id: user.id, username: user.username, role: user.role }, JWT_SECRET, {
             expiresIn: "1d",
         });
         return {
@@ -36,6 +36,7 @@ class AuthService {
             user: {
                 id: user.id,
                 username: user.username,
+                role: user.role,
             },
         };
     }
@@ -50,7 +51,7 @@ class AuthService {
             }
             const query = await prisma.user.create({
                 data: {
-                    password: password,
+                    password: await bcrypt_1.default.hash(password, 10),
                     role: role,
                     username: username,
                 },
