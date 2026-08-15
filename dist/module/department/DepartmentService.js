@@ -58,27 +58,44 @@ class DepartmentService {
             data: department,
         };
     }
-    async checkOwnership(departmentId, user) {
-        if (!user)
-            return;
-        if (user.role === "superUser")
-            return;
-        const dept = await prisma.departement.findUnique({ where: { id: departmentId } });
-        if (!dept) {
-            throw new Error("Department not found");
+    async findOrCreateDepartment(idOrSlug, user) {
+        const normalized = idOrSlug.trim();
+        let dept = await prisma.departement.findFirst({
+            where: {
+                OR: [
+                    { id: normalized },
+                    { slug: { equals: normalized, mode: "insensitive" } },
+                    { name: { equals: normalized, mode: "insensitive" } },
+                ],
+            },
+        });
+        if (dept) {
+            if (user && user.role !== "superUser" && dept.user_id !== user.id) {
+                const err = new Error("Forbidden. Kamu hanya boleh mengelola departemenmu sendiri.");
+                err.status = 403;
+                throw err;
+            }
+            return dept;
         }
-        if (dept.user_id !== user.id) {
-            const err = new Error("Forbidden. Kamu hanya boleh mengelola departemenmu sendiri.");
-            err.status = 403;
-            throw err;
-        }
+        const defaultUser = (user?.id && user.role !== "superUser")
+            ? user.id
+            : (await prisma.user.findFirst())?.id || "";
+        dept = await prisma.departement.create({
+            data: {
+                name: normalized.toUpperCase(),
+                slug: normalized.toLowerCase(),
+                description: `Departemen ${normalized.toUpperCase()}`,
+                user_id: defaultUser,
+            },
+        });
+        return dept;
     }
     // PUT update department
-    async updateDepartment(id, payload, res, user) {
-        await this.checkOwnership(id, user);
+    async updateDepartment(idOrSlug, payload, res, user) {
+        const dept = await this.findOrCreateDepartment(idOrSlug, user);
         const department = await prisma.departement.update({
             where: {
-                id,
+                id: dept.id,
             },
             data: payload,
             include: { fotoDepartements: true },
@@ -95,11 +112,11 @@ class DepartmentService {
         };
     }
     // POST add photo
-    async addPhoto(departmentId, payload, user) {
-        await this.checkOwnership(departmentId, user);
+    async addPhoto(idOrSlug, payload, user) {
+        const dept = await this.findOrCreateDepartment(idOrSlug, user);
         const photo = await prisma.fotoDepartement.create({
             data: {
-                departement_id: departmentId,
+                departement_id: dept.id,
                 url: payload.url,
                 namaFoto: payload.namaFoto,
             },
@@ -113,7 +130,12 @@ class DepartmentService {
     async deletePhoto(photoId, user) {
         const photo = await prisma.fotoDepartement.findUnique({ where: { id: photoId } });
         if (photo) {
-            await this.checkOwnership(photo.departement_id, user);
+            const dept = await prisma.departement.findUnique({ where: { id: photo.departement_id } });
+            if (dept && user && user.role !== "superUser" && dept.user_id !== user.id) {
+                const err = new Error("Forbidden. Kamu hanya boleh mengelola departemenmu sendiri.");
+                err.status = 403;
+                throw err;
+            }
             await prisma.fotoDepartement.delete({
                 where: { id: photoId },
             });
@@ -123,22 +145,22 @@ class DepartmentService {
         };
     }
     // PUT sync photos
-    async syncPhotos(departmentId, photos, user) {
-        await this.checkOwnership(departmentId, user);
+    async syncPhotos(idOrSlug, photos, user) {
+        const dept = await this.findOrCreateDepartment(idOrSlug, user);
         await prisma.fotoDepartement.deleteMany({
-            where: { departement_id: departmentId },
+            where: { departement_id: dept.id },
         });
         if (photos && photos.length > 0) {
             await prisma.fotoDepartement.createMany({
                 data: photos.map((p) => ({
-                    departement_id: departmentId,
+                    departement_id: dept.id,
                     url: p.url,
                     namaFoto: p.namaFoto || "Foto",
                 })),
             });
         }
         const updatedDepartment = await prisma.departement.findUnique({
-            where: { id: departmentId },
+            where: { id: dept.id },
             include: { fotoDepartements: true },
         });
         return {
